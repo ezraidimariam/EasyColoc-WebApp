@@ -1,4 +1,4 @@
-# 🏠 EasyColoc – Colocation Expense Management Platform
+# EasyColoc – Colocation Expense Management Platform
 
 EasyColoc is a full-stack web application designed to simplify shared housing financial management.  
 It allows roommates to track shared expenses, automatically calculate balances, and clearly visualize “who owes who”, eliminating manual calculations and financial conflicts.
@@ -18,7 +18,7 @@ The goal of this project is to develop the backend of a web platform using Larav
 
 ---
 
-## 🚀 Core Features
+## Core Features
 
 ### 👤 User Management
 - Registration & authentication
@@ -27,7 +27,7 @@ The goal of this project is to develop the backend of a web platform using Larav
 - Automatic promotion of first registered user as Global Admin
 - Ban / Unban system
 
-### 🏠 Colocation Management
+###  Colocation Management
 - Create, update, cancel colocations
 - Invitation system via secure token
 - One active colocation per user restriction
@@ -51,7 +51,7 @@ The goal of this project is to develop the backend of a web platform using Larav
 
 ---
 
-## 🧠 Business Logic Highlights
+##  Business Logic Highlights
 
 - Automatic individual share calculation  
 - Real-time debt balance recalculation  
@@ -86,7 +86,7 @@ The goal of this project is to develop the backend of a web platform using Larav
 
 ```bash
 git clone https://github.com/ezraidimariam/EasyColoc-WebApp.git
-cd EasyColoc-WebApp-Laravel
+cd EasyColoc-WebApp
 composer install
 npm install && npm run dev
 cp .env.example .env
