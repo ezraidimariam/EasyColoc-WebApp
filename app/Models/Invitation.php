@@ -27,20 +27,4 @@ class Invitation extends Model
         return $this->belongsTo(Colocation::class);
     }
 
-    public function inviter()
-    {
-        return $this->belongsTo(User::class, 'invited_by');
-    }
-
-    public function accept()
-    {
-        $this->status = 'accepted';
-        $this->save();
-    }
-
-    public function reject()
-    {
-        $this->status = 'rejected';
-        $this->save();
-    }
 }
