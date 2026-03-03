@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'reputation',
+        'is_admin',
     ];
 
     /**
@@ -61,7 +62,10 @@ class User extends Authenticatable
 
     public function activeColocation()
     {
-        return $this->colocations()->whereNull('colocation_user.left_at')->first();
+        return $this->colocations()
+            ->whereNull('colocation_user.left_at')
+            ->where('status', 'active')
+            ->first();
     }
 
     public function expenses()
@@ -74,9 +78,27 @@ class User extends Authenticatable
         return $this->hasMany(Invitation::class, 'invited_by');
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($user) {
+            // Promote first user to admin
+            if ($user->id === 1) {
+                $user->is_admin = true;
+                $user->save();
+            }
+        });
+    }
+
     public function updateReputation($change)
     {
         $this->reputation += $change;
         $this->save();
+    }
+
+    public function isAdmin()
+    {
+        return $this->is_admin ?? false;
     }
 }

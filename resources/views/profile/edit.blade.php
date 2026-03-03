@@ -85,7 +85,11 @@
                 </div>
             </div>
             
-            <form method="POST" action="{{ route('password.update') }}" class="space-y-6">
+            <form method="POST" action="{{ route('password.update') }}" class="space-y-6" x-data="{ 
+                showCurrent: false, 
+                showNew: false, 
+                showConfirm: false 
+            }">
                 @csrf
                 @method('PUT')
                 
@@ -98,18 +102,17 @@
                                 type="password" 
                                 id="current_password" 
                                 name="current_password"
+                                :type="showCurrent ? 'text' : 'password'"
                                 class="w-full pl-10 pr-12 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 transition-all"
                                 required
-                                x-data="{ show: false }"
-                                :type="show ? 'text' : 'password'"
                             >
                             <button 
                                 type="button" 
-                                @click="show = !show"
+                                @click="showCurrent = !showCurrent"
                                 class="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-primary transition-colors"
                             >
-                                <span class="material-symbols-outlined text-sm" x-show="!show">visibility</span>
-                                <span class="material-symbols-outlined text-sm" x-show="show">visibility_off</span>
+                                <span class="material-symbols-outlined text-sm" x-show="!showCurrent">visibility</span>
+                                <span class="material-symbols-outlined text-sm" x-show="showCurrent">visibility_off</span>
                             </button>
                         </div>
                         @error('current_password')
@@ -125,18 +128,17 @@
                                 type="password" 
                                 id="password" 
                                 name="password"
+                                :type="showNew ? 'text' : 'password'"
                                 class="w-full pl-10 pr-12 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 transition-all"
                                 required
-                                x-data="{ show: false }"
-                                :type="show ? 'text' : 'password'"
                             >
                             <button 
                                 type="button" 
-                                @click="show = !show"
+                                @click="showNew = !showNew"
                                 class="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-primary transition-colors"
                             >
-                                <span class="material-symbols-outlined text-sm" x-show="!show">visibility</span>
-                                <span class="material-symbols-outlined text-sm" x-show="show">visibility_off</span>
+                                <span class="material-symbols-outlined text-sm" x-show="!showNew">visibility</span>
+                                <span class="material-symbols-outlined text-sm" x-show="showNew">visibility_off</span>
                             </button>
                         </div>
                         @error('password')
@@ -153,18 +155,17 @@
                             type="password" 
                             id="password_confirmation" 
                             name="password_confirmation"
+                            :type="showConfirm ? 'text' : 'password'"
                             class="w-full pl-10 pr-12 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 transition-all"
                             required
-                            x-data="{ show: false }"
-                            :type="show ? 'text' : 'password'"
                         >
                         <button 
                             type="button" 
-                            @click="show = !show"
+                            @click="showConfirm = !showConfirm"
                             class="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-primary transition-colors"
                         >
-                            <span class="material-symbols-outlined text-sm" x-show="!show">visibility</span>
-                            <span class="material-symbols-outlined text-sm" x-show="show">visibility_off</span>
+                            <span class="material-symbols-outlined text-sm" x-show="!showConfirm">visibility</span>
+                            <span class="material-symbols-outlined text-sm" x-show="showConfirm">visibility_off</span>
                         </button>
                     </div>
                 </div>

@@ -26,6 +26,11 @@ class Colocation extends Model
 
     public function activeMembers()
     {
+        // Only return active members for active colocations
+        if ($this->status !== 'active') {
+            return collect([]);
+        }
+        
         return $this->members()->whereNull('colocation_user.left_at');
     }
 

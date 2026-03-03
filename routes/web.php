@@ -32,6 +32,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/colocations/{colocation}/expenses/{expense}', [ExpenseController::class, 'update'])->name('expenses.update');
     Route::delete('/colocations/{colocation}/expenses/{expense}', [ExpenseController::class, 'destroy'])->name('expenses.destroy');
     
+    Route::post('/colocations/{colocation}/payments', [PaymentController::class, 'store'])->name('payments.store');
+    
     Route::get('/invitations/{token}', [InvitationController::class, 'show'])->name('invitations.show');
     Route::post('/invitations/{token}/accept', [InvitationController::class, 'accept'])->name('invitations.accept');
     Route::post('/invitations/{token}/reject', [InvitationController::class, 'reject'])->name('invitations.reject');

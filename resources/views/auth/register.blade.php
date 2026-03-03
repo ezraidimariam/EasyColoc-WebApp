@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="light" lang="en">
+<html class="dark" lang="en">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -169,12 +169,19 @@
 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">lock_reset</span>
 <input 
     name="password_confirmation"
-    class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all placeholder:text-slate-400" 
+    class="w-full pl-10 pr-10 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all placeholder:text-slate-400" 
     placeholder="••••••••" 
     type="password"
     required
     autocomplete="new-password"
+    x-data="{ show: false }"
+    :type="show ? 'text' : 'password'"
 >
+<button class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600" type="button" @click="show = !show">
+<span class="material-symbols-outlined text-sm" x-show="!show">visibility</span>
+<span class="material-symbols-outlined text-sm" x-show="show">visibility_off</span>
+</button>
+</div>
 </div>
 @error('password_confirmation')
     <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -225,3 +232,5 @@
 </div>
 </body>
 </html>
+
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>

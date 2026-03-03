@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Expense;
 use App\Models\Colocation;
 use App\Models\Invitation;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\InvitationMail;
 
 class ColocationController extends Controller
 {
@@ -68,10 +70,31 @@ class ColocationController extends Controller
         
         $balances = $colocation->calculateBalances();
         $settlements = $colocation->getSettlements();
-        $expenses = $colocation->expenses()->orderBy('date', 'desc')->get();
+        
+        // Handle month filtering
+        $month = request('month', 'all');
+        if ($month !== 'all') {
+            $expenses = $colocation->expenses()
+                ->whereMonth('date', $month)
+                ->orderBy('date', 'desc')
+                ->get();
+        } else {
+            $expenses = $colocation->expenses()->orderBy('date', 'desc')->get();
+        }
+        
+        // Calculate statistics
+        $totalExpenses = $expenses->sum('amount');
+        $expensesByCategory = $expenses->groupBy('category')
+            ->map(function ($categoryExpenses) {
+                return [
+                    'total' => $categoryExpenses->sum('amount'),
+                    'count' => $categoryExpenses->count()
+                ];
+            });
+        
         $invitations = $colocation->invitations()->where('status', 'pending')->get();
         
-        return view('colocations.show', compact('colocation', 'balances', 'settlements', 'expenses', 'invitations'));
+        return view('colocations.show', compact('colocation', 'balances', 'settlements', 'expenses', 'expensesByCategory', 'month', 'invitations'));
     }
 
     public function invite(Request $request, Colocation $colocation)
@@ -88,8 +111,11 @@ class ColocationController extends Controller
             'invited_by' => Auth::id(),
         ]);
 
+        // For now, just show the invitation link instead of sending email
+        $invitationLink = route('invitations.show', $invitation->token);
+        
         return redirect()->route('colocations.show', $colocation)
-            ->with('success', 'Invitation envoyée!');
+            ->with('success', "Invitation créée! Lien d'invitation: " . $invitationLink);
     }
 
     public function leave(Colocation $colocation)
@@ -118,17 +144,29 @@ class ColocationController extends Controller
 
     public function cancel(Colocation $colocation)
     {
-        // Debug: Check if user is authenticated
+        // Check if user is authenticated
         if (!Auth::check()) {
             return redirect()->route('login')->with('error', 'Vous devez être connecté.');
         }
         
-        // Debug: Check authorization
-        $this->authorize('manage', $colocation);
+        // Check if colocation exists
+        if (!$colocation) {
+            return redirect()->route('colocations.index')->with('error', 'Colocation introuvable.');
+        }
         
-        // Debug: Log the cancellation
-        \Log::info('User ' . Auth::user()->id . ' is cancelling colocation ' . $colocation->id);
+        // Check if user is the owner
+        if ($colocation->owner_id !== Auth::id()) {
+            return redirect()->route('colocations.show', $colocation)
+                ->with('error', 'Seul le propriétaire peut annuler la colocation.');
+        }
         
+        // Check if colocation is already cancelled
+        if ($colocation->status === 'cancelled') {
+            return redirect()->route('colocations.show', $colocation)
+                ->with('error', 'Cette colocation est déjà annulée.');
+        }
+        
+        // Calculate balances and update reputation
         $balances = $colocation->calculateBalances();
         
         foreach ($balances as $balance) {
@@ -137,6 +175,7 @@ class ColocationController extends Controller
             }
         }
 
+        // Update colocation status
         $colocation->update(['status' => 'cancelled']);
 
         return redirect()->route('colocations.index')
