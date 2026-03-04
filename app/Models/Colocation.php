@@ -67,7 +67,10 @@ class Colocation extends Model
             $sharePerPerson = $totalExpenses / $memberCount;
             
             foreach ($expenses as $expense) {
-                $balances[$expense->payer_id]['paid'] += $expense->amount;
+                // Vérifier si le payeur est dans la liste des membres actifs
+                if (isset($balances[$expense->payer_id])) {
+                    $balances[$expense->payer_id]['paid'] += $expense->amount;
+                }
             }
             
             foreach ($members as $member) {

@@ -102,6 +102,9 @@
 </div>
 <form method="POST" action="{{ route('login') }}" class="space-y-5">
     @csrf
+    @if(session('invitation_token'))
+        <input type="hidden" name="invitation_token" value="{{ session('invitation_token') }}">
+    @endif
 <div class="space-y-2">
 <label class="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">Email Address</label>
 <div class="relative group">
