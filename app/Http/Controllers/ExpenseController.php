@@ -9,11 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class ExpenseController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function create(Colocation $colocation)
     {
         $this->authorize('view', $colocation);
