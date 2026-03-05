@@ -11,10 +11,6 @@ use Illuminate\Support\Facades\Session;
 
 class InvitationController extends Controller
 {
-    public function __construct()
-    {
-        // Pas de middleware auth - on gère les 3 cas manuellement
-    }
 
     public function show($token)
     {

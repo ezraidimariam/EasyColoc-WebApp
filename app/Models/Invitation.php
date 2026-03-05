@@ -13,15 +13,6 @@ class Invitation extends Model
         'status' => 'string',
     ];
 
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($invitation) {
-            $invitation->token = Str::random(32);
-        });
-    }
-
     public function colocation()
     {
         return $this->belongsTo(Colocation::class);

@@ -44,6 +44,11 @@ class Colocation extends Model
         return $this->hasMany(Invitation::class);
     }
 
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
     public function calculateBalances()
     {
         $members = $this->activeMembers;
@@ -76,6 +81,17 @@ class Colocation extends Model
             foreach ($members as $member) {
                 $balances[$member->id]['share'] = $sharePerPerson;
                 $balances[$member->id]['balance'] = $balances[$member->id]['paid'] - $sharePerPerson;
+            }
+            
+            // Soustraire les paiements effectués
+            $payments = $this->payments;
+            foreach ($payments as $payment) {
+                if (isset($balances[$payment->from_user_id])) {
+                    $balances[$payment->from_user_id]['balance'] += $payment->amount;
+                }
+                if (isset($balances[$payment->to_user_id])) {
+                    $balances[$payment->to_user_id]['balance'] -= $payment->amount;
+                }
             }
         }
         

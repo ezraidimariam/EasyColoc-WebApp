@@ -8,6 +8,7 @@ use App\Models\Colocation;
 use App\Models\Invitation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use App\Mail\InvitationMail;
 
 class ColocationController extends Controller
@@ -101,10 +102,14 @@ class ColocationController extends Controller
             'email' => 'required|email',
         ]);
 
+        // Créer le token manuellement
+        $token = Str::random(16);
+
         $invitation = Invitation::create([
             'email' => $request->email,
             'colocation_id' => $colocation->id,
             'invited_by' => Auth::id(),
+            'token' => $token,  // Token créé manuellement
         ]);
 
         // For now, just show the invitation link instead of sending email
